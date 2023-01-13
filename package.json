@@ -1,0 +1,27 @@
+{
+  "name": "deref_schema",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module":"dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "author": "",
+  "dependencies": {
+    "@cfworker/json-schema": "^1.12.5",
+    "fs": "0.0.1-security"
+  },
+  "devDependencies": {
+    "@types/node": "^18.11.13",
+    "typescript": "^4.9.4"
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*",
+    "tsconfig.json",
+    "README.md",
+    "package.json"
+  ]
+}

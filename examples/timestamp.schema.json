@@ -1,0 +1,17 @@
+{
+    "$id": "https://example.com/timestamp.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "description": "Timestamp definition.",
+    "required": [
+        "seconds"
+    ],
+    "type": "object",
+    "properties": {
+        "seconds": {
+            "type": "number"
+        },
+        "nanos": {
+            "type": "number"
+        }
+    }
+}

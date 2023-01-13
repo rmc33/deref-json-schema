@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/feed.schema.json",
+  "title": "Product",
+  "description": "A feed",
+  "type": "object",
+  "properties": {
+    "data": {
+      "description": "The feed data",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/feed_item"
+      }
+    }
+  },
+  "required": [
+    "data"
+  ],
+  "definitions": {
+    "feed_item": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "price": {
+          "description": "Money definition.",
+          "$ref": "money.schema.json"
+        },
+        "time": {
+          "$ref": "timestamp.schema.json"
+        }
+      },
+      "oneOf": [
+        {"required": ["price"]},
+        {"required": ["time"]}
+      ]
+    }
+  }
+}

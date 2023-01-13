@@ -1,0 +1,25 @@
+{
+    "$id": "https://example.com/money.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Money",
+    "description": "Money definition.",
+    "required": [
+        "units",
+        "currency"
+    ],
+    "type": "object",
+    "properties": {
+        "units": {
+            "type": "number"
+        },
+        "currency": {
+            "type": "string"
+        },
+        "nanos": {
+            "type": "number"
+        },
+        "printDate": {
+            "$ref": "timestamp.schema.json"
+        }
+    }
+}
