@@ -1,4 +1,4 @@
-import { Validator } from "@cfworker/json-schema";
+import { Validator } from '@cfworker/json-schema';
 import { readFileSync } from 'fs';
 import path from 'path';
 
@@ -34,7 +34,7 @@ export class DerefSchema {
             return;
         }
         if (!schemasAdded.has(refValue)) {
-            const filePath = basePath ? basePath + path.sep + refValue: refValue;
+            const filePath = basePath ? path.resolve(basePath, refValue) : refValue;
             const refSchema = JSON.parse(readFileSync(filePath, 'utf-8')) as object;
             schemasAdded.add(refValue);
             validator.addSchema(refSchema);

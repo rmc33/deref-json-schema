@@ -1,5 +1,5 @@
 {
-  "name": "deref_schema",
+  "name": "deref-json-schema",
   "license": "MIT",
   "main": "dist/index.js",
   "module":"dist/index.js",
