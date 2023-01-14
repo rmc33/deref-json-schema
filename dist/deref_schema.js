@@ -1,8 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
-
 export class DerefSchema {
-    static dereference(schema, validator, basePath) {
+    static addAllRefSchemas(schema, validator, basePath) {
         const schemasAdded = new Set();
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }

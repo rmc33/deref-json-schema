@@ -4,6 +4,11 @@
   "main": "dist/index.js",
   "module":"dist/index.js",
   "type": "module",
+  "version": "0.0.2",
+  "repository": { 
+    "type": "git", 
+    "url": "https://github.com/rmc33/deref-json-schema" 
+  },
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean"

@@ -8,7 +8,7 @@ interface RefObject {
 
 export class DerefSchema {
 
-    static dereference(schema: object, validator: Validator, basePath: string) {
+    static addAllRefSchemas(schema: object, validator: Validator, basePath='') {
         const schemasAdded = new Set<string>();
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
@@ -41,4 +41,5 @@ export class DerefSchema {
             return refSchema;
         }
     }
+
 }

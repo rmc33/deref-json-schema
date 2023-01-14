@@ -1,7 +1,5 @@
 import { Validator } from '@cfworker/json-schema';
 import { createRequire } from "module";
-import * as test  from '../dist/index.js';
-//console.log('test=', test);
 import { DerefSchema } from '../dist/index.js';
 
 const require = createRequire(import.meta.url);
@@ -11,7 +9,7 @@ const shortCircuit = false;
 const draft = '2020-12';
 
 const v = new Validator(feedSchema);
-DerefSchema.dereference(feedSchema, v);
+DerefSchema.addAllRefSchemas(feedSchema, v);
 
 const result = v.validate({
     data: [
@@ -28,7 +26,7 @@ const feedItemValidator = new Validator(
     { $ref: '#/definitions/feed_item', definitions: feedSchema.definitions },
     draft,
     shortCircuit);
-DerefSchema.dereference(feedSchema, feedItemValidator);
+DerefSchema.addAllRefSchemas(feedSchema, feedItemValidator);
 
 const feedItemResult = feedItemValidator.validate(
     { id: "1", price: { units: 100 }, time: { seconds: 100 } },
