@@ -1,8 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 export class DerefSchema {
-    static addAllRefSchemas(schema, validator, basePath) {
-        const schemasAdded = new Set();
+    static addAllRefSchemas(schema, validator, schemasAdded, basePath = '') {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
     static findRefs(schema, schemasAdded, callback) {
@@ -14,7 +13,6 @@ export class DerefSchema {
             if (schema['$ref'] !== undefined) {
                 const refSchema = callback(schema);
                 refSchema && this.findRefs(refSchema, schemasAdded, callback);
-                return;
             }
             Object.keys(schema).forEach(key => this.findRefs(schema[key], schemasAdded, callback));
         }

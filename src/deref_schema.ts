@@ -8,8 +8,7 @@ interface RefObject {
 
 export class DerefSchema {
 
-    static addAllRefSchemas(schema: object, validator: Validator, basePath='') {
-        const schemasAdded = new Set<string>();
+    static addAllRefSchemas(schema: object, validator: Validator, schemasAdded: Set<string>, basePath='') {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
 
@@ -22,7 +21,6 @@ export class DerefSchema {
             if (schema['$ref'] !== undefined) {
                 const refSchema = callback(schema as RefObject);
                 refSchema && this.findRefs(refSchema, schemasAdded, callback);
-                return;
             }
             Object.keys(schema).forEach(key => this.findRefs(schema[key], schemasAdded, callback));
         }
