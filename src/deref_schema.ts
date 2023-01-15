@@ -1,4 +1,4 @@
-import { Validator } from '@cfworker/json-schema';
+import { Validator, Schema, SchemaDraft } from '@cfworker/json-schema';
 import { readFileSync } from 'fs';
 import path from 'path';
 
@@ -7,6 +7,26 @@ interface RefObject {
 }
 
 export class DerefSchema {
+
+    private readonly _schema: Schema | boolean;
+    private readonly _validator: Validator;
+    private readonly _schemasAded: Set<string>;
+    public getSchemasAded(): Set<string> {
+        return this._schemasAded;
+    }
+    public getValidator() {
+        return this._validator;
+    }
+    public getSchema() {
+        return this._schema;
+    }
+
+    constructor(schema: Schema | boolean, draft?: SchemaDraft, shortCircuit?: boolean, basePath='') {
+        this._schema = schema;
+        this._validator = new Validator(schema, draft, shortCircuit);
+        this._schemasAded = new Set<string>();
+        DerefSchema.addAllRefSchemas(schema as object, this._validator, this._schemasAded, basePath);
+    }
 
     static addAllRefSchemas(schema: object, validator: Validator, schemasAdded: Set<string>, basePath='') {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));

@@ -1,6 +1,23 @@
+import { Validator } from '@cfworker/json-schema';
 import { readFileSync } from 'fs';
 import path from 'path';
+
 export class DerefSchema {
+    getSchemasAded() {
+        return this._schemasAded;
+    }
+    getValidator() {
+        return this._validator;
+    }
+    getSchema() {
+        return this._schema;
+    }
+    constructor(schema, draft, shortCircuit, basePath = '') {
+        this._schema = schema;
+        this._validator = new Validator(schema, draft, shortCircuit);
+        this._schemasAded = new Set();
+        DerefSchema.addAllRefSchemas(schema, this._validator, this._schemasAded, basePath);
+    }
     static addAllRefSchemas(schema, validator, schemasAdded, basePath = '') {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
