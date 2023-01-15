@@ -34,6 +34,6 @@ function getErrors(result) {
     return result.errors && result.errors.filter((item) => {
         return !["$ref", "items", "properties"].includes(item.keyword);
     }).map((item)=> {
-        return `instanceLocation:${item.instanceLocation}, error: ${item.error}`;
+        return `instanceLocation: ${item.instanceLocation}, error: ${item.error}`;
     });
 }

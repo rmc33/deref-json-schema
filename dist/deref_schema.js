@@ -1,7 +1,6 @@
 import { Validator } from '@cfworker/json-schema';
 import { readFileSync } from 'fs';
 import path from 'path';
-
 export class DerefSchema {
     getSchemasAded() {
         return this._schemasAded;
