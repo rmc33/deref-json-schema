@@ -1,5 +1,5 @@
 import { createRequire } from 'module';
-import { DerefSchema } from 'deref-json-schema';
+import { DerefSchema } from '../dist/index.js';
 
 const require = createRequire(import.meta.url);
 const feedSchema = require('./feed.schema.json');
@@ -7,7 +7,7 @@ const feedSchema = require('./feed.schema.json');
 const shortCircuit = false;
 const draft = '2020-12';
 
-const feedSchemaDeref = new DerefSchema(feedSchema);
+const feedSchemaDeref = DerefSchema.create(feedSchema);
 
 const result = feedSchemaDeref.getValidator().validate({
     data: [
@@ -20,7 +20,7 @@ console.log(JSON.stringify(feedSchema));
 
 console.log('result = ', getErrors(result));
 
-const feedItemSchemaDeref= new DerefSchema(
+const feedItemSchemaDeref = DerefSchema.create(
     { $ref: '#/definitions/feed_item', definitions: feedSchema.definitions },
     draft,
     shortCircuit);
