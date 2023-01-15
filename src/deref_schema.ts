@@ -76,7 +76,7 @@ export class DerefSchema {
         }
         const filePath = refValue.match(/(.*)#?/); // get local file path up to # if present
         if (filePath && !schemasAdded.has(filePath[1])) {
-            const fullFilePath = basePath ? path.resolve(basePath, filePath[1]) : refValue;
+            const fullFilePath = basePath ? path.resolve(basePath, filePath[1]) : filePath[1];
             const refSchema = JSON.parse(readFileSync(fullFilePath, 'utf-8')) as Schema;
             schemasAdded.add(refValue);
             validator.addSchema(refSchema);
