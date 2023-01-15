@@ -1,6 +1,6 @@
 # deref-json-schema
 
-Uses `@cfworker/json-schema` to recursively call [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts).`addSchema` for all `$ref` schemas.
+Creates a dereferenced schema and `@cfworker/json-schema` [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts). Calls `Validator.addSchema` for all local file `$ref` schemas.
 
 
 # Basic usage
@@ -36,8 +36,8 @@ Creating a `DerefSchema` will search `feedSchema`, find `$ref` with value `feed_
 ```js
 const result = feedDeref.getValidator().validate({
     data: [
-        { id: "1", price: { units: 100 }, time: { seconds: 100 } },
-        { id: "1", price: { units: 100, currency: 'USD' }, time: { seconds: 200 } }
+        { id: '1', price: { units: 100 }, time: { seconds: 100 } },
+        { id: '1', price: { units: 100, currency: 'USD' }, time: { seconds: 200 } }
     ]
 });
 ```
