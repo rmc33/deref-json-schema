@@ -21,17 +21,17 @@ export class DerefSchema {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
     static findRefs(schema, schemasAdded, callback) {
-        if (Array.isArray(schema)) {
-            schema.forEach((item) => this.findRefs(item, schemasAdded, callback));
-            return;
+        if (schema['$ref'] !== undefined) {
+            const refSchema = callback(schema);
+            refSchema && this.findRefs(refSchema, schemasAdded, callback);
         }
-        if (typeof schema === 'object') {
-            if (schema['$ref'] !== undefined) {
-                const refSchema = callback(schema);
-                refSchema && this.findRefs(refSchema, schemasAdded, callback);
+        Object.keys(schema).forEach(key => {
+            if (Array.isArray(schema[key])) {
+                schema[key].forEach((item) => typeof item === 'object' && this.findRefs(item, schemasAdded, callback));
+                return;
             }
-            Object.keys(schema).forEach(key => this.findRefs(schema[key], schemasAdded, callback));
-        }
+            typeof schema[key] === 'object' && this.findRefs(schema[key], schemasAdded, callback);
+        });
     }
     static addSchema(ref, schemasAdded, validator, basePath) {
         const refValue = ref.$ref;

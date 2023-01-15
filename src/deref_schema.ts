@@ -29,21 +29,21 @@ export class DerefSchema {
     }
 
     static addAllRefSchemas(schema: Schema, validator: Validator, schemasAdded: Set<string>, basePath='') {
-        this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
+        this.findRefs(schema as object, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
 
-    static findRefs(schema: Schema, schemasAdded: Set<string>, callback: (r: RefObject) => Schema | undefined) {
-        if (Array.isArray(schema)) {
-            schema.forEach((item) => this.findRefs(item, schemasAdded, callback));
-            return;
+    static findRefs(schema: object, schemasAdded: Set<string>, callback: (r: RefObject) => object | undefined) {
+        if (schema['$ref'] !== undefined) {
+            const refSchema = callback(schema as RefObject);
+            refSchema && this.findRefs(refSchema as object, schemasAdded, callback);
         }
-        if (typeof schema === 'object') {
-            if (schema['$ref'] !== undefined) {
-                const refSchema = callback(schema as RefObject);
-                refSchema && this.findRefs(refSchema, schemasAdded, callback);
+        Object.keys(schema).forEach(key => {
+            if (Array.isArray(schema[key])) {
+                schema[key].forEach((item) => typeof item === 'object' && this.findRefs(item, schemasAdded, callback));
+                return;
             }
-            Object.keys(schema).forEach(key => this.findRefs(schema[key], schemasAdded, callback));
-        }
+            typeof schema[key] === 'object' &&  this.findRefs(schema[key], schemasAdded, callback);
+        });
     }
 
     static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : Schema | undefined {

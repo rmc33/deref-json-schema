@@ -2,14 +2,18 @@
   "name": "deref-json-schema",
   "license": "MIT",
   "main": "dist/index.js",
-  "module":"dist/index.js",
+  "module": "dist/index.js",
   "type": "module",
-  "version": "0.0.8",
-  "repository": { 
-    "type": "git", 
-    "url": "https://github.com/rmc33/deref-json-schema" 
+  "version": "0.0.9",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rmc33/deref-json-schema"
   },
-  "keywords": ["@cfworker/json-schema", "deref", "json-schema"],
+  "keywords": [
+    "@cfworker/json-schema",
+    "deref",
+    "json-schema"
+  ],
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean"
@@ -28,6 +32,8 @@
     "src/**/*",
     "tsconfig.json",
     "README.md",
-    "package.json"
+    "package.json",
+    "index.d.ts",
+    "index.d.ts.map"
   ]
 }

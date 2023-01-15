@@ -1,5 +1,5 @@
 import { createRequire } from 'module';
-import { DerefSchema } from '../dist/index.js';
+import { DerefSchema } from 'deref-json-schema';
 
 const require = createRequire(import.meta.url);
 const feedSchema = require('./feed.schema.json');
