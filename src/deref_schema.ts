@@ -32,7 +32,7 @@ export class DerefSchema {
         this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
     }
 
-    static findRefs(schema: Schema, schemasAdded: Set<string>, callback: (r: RefObject) => Schema) {
+    static findRefs(schema: Schema, schemasAdded: Set<string>, callback: (r: RefObject) => Schema | undefined) {
         if (Array.isArray(schema)) {
             schema.forEach((item) => this.findRefs(item, schemasAdded, callback));
             return;
@@ -46,7 +46,7 @@ export class DerefSchema {
         }
     }
 
-    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : Schema {
+    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : Schema | undefined {
         const refValue = ref.$ref;
         if (refValue[0] === '#') {
             return;
