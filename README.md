@@ -1,6 +1,6 @@
 # deref-json-schema
 
-Creates a dereferenced schema for the `@cfworker/json-schema` [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts). Traverses schema and calls `Validator.addSchema` with the contents of each unique local file referenced in `$ref` properties.
+Creates a dereferenced schema for the `@cfworker/json-schema` [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts). Traverses schema and calls `Validator.addSchema` with the contents of each unique local file path in `$ref` properties.
 
 
 # Basic usage 
@@ -24,15 +24,15 @@ Creates a dereferenced schema for the `@cfworker/json-schema` [Validator](https:
   }
 }
 ```
-2. Initalialize `DerefSchema` with base schema
+2. Create `DerefSchema` with base schema
 ```js
 const schema = require('./feed.schema.json');
-const schemaDeref = new DerefSchema(schema);
+const schemaDeref = DerefSchema.create(schema);
 ```
 
 Creating a `DerefSchema` will search `schema`, find a `$ref` with value `feed_item.schema.json` and call [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts).`addSchema` with the JSON object from the file. This will be done recusively for all `$ref` schemas; schema files already added will not be added again. A `basePath` can be optionally supplied to the `DerefSchema` constructor to resolve `$ref` value file paths relative to the `basePath`.
 
-3. Validate using schema
+3. Validate
 ```js
 const result = schemaDeref.getValidator().validate({
     data: [

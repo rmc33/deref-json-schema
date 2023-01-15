@@ -11,14 +11,22 @@ export class DerefSchema {
     getSchema() {
         return this._schema;
     }
+    getBasePath() {
+        return this._basePath;
+    }
     constructor(schema, draft, shortCircuit, basePath = '') {
         this._schema = schema;
         this._validator = new Validator(schema, draft, shortCircuit);
         this._schemasAded = new Set();
-        DerefSchema.addAllRefSchemas(schema, this._validator, this._schemasAded, basePath);
+        this._basePath = basePath;
     }
-    static addAllRefSchemas(schema, validator, schemasAdded, basePath = '') {
-        this.findRefs(schema, schemasAdded, ref => this.addSchema(ref, schemasAdded, validator, basePath));
+    static create(schema, draft, shortCircuit, basePath = '') {
+        const derefSchema = new DerefSchema(schema, draft, shortCircuit, basePath);
+        derefSchema.addAllRefSchemas();
+        return derefSchema;
+    }
+    addAllRefSchemas() {
+        DerefSchema.findRefs(this._schema, this._schemasAded, ref => DerefSchema.addSchema(ref, this._schemasAded, this._validator, this._basePath));
     }
     static findRefs(schema, schemasAdded, callback) {
         if (schema['$ref'] !== undefined) {
@@ -35,12 +43,13 @@ export class DerefSchema {
     }
     static addSchema(ref, schemasAdded, validator, basePath) {
         const refValue = ref.$ref;
-        if (refValue[0] === '#') {
+        if (refValue[0] === '#') { // ignore internal reference
             return;
         }
-        if (!schemasAdded.has(refValue)) {
-            const filePath = basePath ? path.resolve(basePath, refValue) : refValue;
-            const refSchema = JSON.parse(readFileSync(filePath, 'utf-8'));
+        const filePath = refValue.match(/(.*)#?/); // get local file path up to # if present
+        if (filePath && !schemasAdded.has(filePath[1])) {
+            const fullFilePath = basePath ? path.resolve(basePath, filePath[1]) : refValue;
+            const refSchema = JSON.parse(readFileSync(fullFilePath, 'utf-8'));
             schemasAdded.add(refValue);
             validator.addSchema(refSchema);
             return refSchema;
