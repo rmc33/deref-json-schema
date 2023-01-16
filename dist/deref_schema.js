@@ -14,13 +14,13 @@ export class DerefSchema {
     getBasePath() {
         return this._basePath;
     }
-    constructor(schema, draft, shortCircuit, basePath = '') {
+    constructor(schema, draft, shortCircuit, basePath) {
         this._schema = schema;
         this._validator = new Validator(schema, draft, shortCircuit);
         this._schemasAded = new Set();
         this._basePath = basePath;
     }
-    static create(schema, draft, shortCircuit, basePath = '') {
+    static create(schema, draft, shortCircuit, basePath) {
         const derefSchema = new DerefSchema(schema, draft, shortCircuit, basePath);
         derefSchema.addAllRefSchemas();
         return derefSchema;
@@ -50,7 +50,7 @@ export class DerefSchema {
         if (filePath && !schemasAdded.has(filePath[1])) {
             const fullFilePath = basePath ? path.resolve(basePath, filePath[1]) : filePath[1];
             const refSchema = JSON.parse(readFileSync(fullFilePath, 'utf-8'));
-            schemasAdded.add(refValue);
+            schemasAdded.add(filePath[1]);
             validator.addSchema(refSchema);
             return refSchema;
         }
