@@ -1,16 +1,9 @@
 import { Validator, Schema, SchemaDraft } from '@cfworker/json-schema';
-import { readFileSync } from 'fs';
+import fs from 'fs';
 import path from 'path';
 
 interface RefObject {
     $ref: string;
-}
-
-interface DerefCreateOptions {
-    schema: Schema;
-    draft: SchemaDraft;
-    shortCircuit: boolean;
-    basePath: string;
 }
 
 export class DerefSchema {
@@ -71,14 +64,15 @@ export class DerefSchema {
 
     static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : object | undefined {
         const refValue = ref.$ref;
-        if (refValue[0] === '#') { // ignore internal reference
+        const hashIndex = ref.$ref.indexOf('#');
+        if (hashIndex === 0) { // ignore internal reference
             return;
         }
-        const filePath = refValue.match(/(.*)#?/); // get local file path up to # if present
-        if (filePath && !schemasAdded.has(filePath[1])) {
-            const fullFilePath = basePath ? path.resolve(basePath, filePath[1]) : filePath[1];
-            const refSchema = JSON.parse(readFileSync(fullFilePath, 'utf-8')) as Schema;
-            schemasAdded.add(filePath[1]);
+        const filePath = hashIndex === -1 ? refValue : refValue.substring(0, hashIndex); // get local file path up to # or end of the string
+        if (filePath && !schemasAdded.has(filePath)) {
+            const fullFilePath = basePath ? path.resolve(basePath, filePath) : filePath;
+            const refSchema = JSON.parse(fs.readFileSync(fullFilePath, 'utf-8')) as Schema;
+            schemasAdded.add(filePath);
             validator.addSchema(refSchema);
             return refSchema;
         }
