@@ -16,7 +16,7 @@ describe('DerefSchema module', () => {
         };
         subSchema = {
             type: "number",
-            $id: "https://deref_schema.com/subschema.json"
+            $id: "subschema.json"
         };
     });
 
@@ -37,10 +37,13 @@ describe('DerefSchema module', () => {
 
     test('calling create with $ref adds subschema from subschema', () => {
         const subSchema: Schema = {
-            $id: "https://deref_schema.com/subschema.json",
+            $id: "subschema.json",
             definitions: {
                 example: {
                     type: "boolean"
+                },
+                something: {
+                    $ref: "something.json"
                 },
                 other: {
                     $ref: "other.json"
@@ -48,11 +51,12 @@ describe('DerefSchema module', () => {
             }
         };
         jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(subSchema))
-            .mockReturnValue(JSON.stringify({type: 'number'}));
+            .mockReturnValueOnce(JSON.stringify({type: 'number', $id: 'something.json'}))
+            .mockReturnValue(JSON.stringify({type: 'number', $id: 'other.json'}));
         const derefSchema: DerefSchema = DerefSchema.create(schema);
         expect(fs.readFileSync).toHaveBeenCalledWith('test.json', 'utf-8');
         expect(fs.readFileSync).toHaveBeenCalledWith('other.json', 'utf-8');
-        expect(derefSchema.getSchemasAded()).toEqual(new Set(['test.json', 'other.json']));
+        expect(derefSchema.getSchemasAded()).toEqual(new Set(['test.json', 'other.json', 'something.json']));
     });
 
   });
