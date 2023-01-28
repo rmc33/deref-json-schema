@@ -1,6 +1,6 @@
 import { Validator, Schema, SchemaDraft } from '@cfworker/json-schema';
 interface RefObject {
-    $ref: string;
+    $ref?: string;
 }
 export declare class DerefSchema {
     private readonly _schema;
@@ -14,8 +14,8 @@ export declare class DerefSchema {
     constructor(schema: Schema, draft?: SchemaDraft, shortCircuit?: boolean, basePath?: string);
     static create(schema: Schema, draft?: SchemaDraft, shortCircuit?: boolean, basePath?: string): DerefSchema;
     addAllRefSchemas(): void;
-    static findRefs(schema: object, schemasAdded: Set<string>, callback: (r: RefObject) => object | undefined): void;
-    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string): object | undefined;
+    static findRefs(schema: RefObject, schemasAdded: Set<string>, callback: (r: RefObject) => Schema | undefined): void;
+    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string): Schema | undefined;
 }
 export {};
 //# sourceMappingURL=deref_schema.d.ts.map

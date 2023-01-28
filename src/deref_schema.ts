@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 interface RefObject {
-    $ref: string;
+    $ref?: string;
 }
 
 export class DerefSchema {
@@ -48,8 +48,8 @@ export class DerefSchema {
             ref => DerefSchema.addSchema(ref, this._schemasAded, this._validator, this._basePath));
     }
 
-    static findRefs(schema: object, schemasAdded: Set<string>, callback: (r: RefObject) => object | undefined) {
-        if (schema['$ref'] !== undefined) {
+    static findRefs(schema: RefObject, schemasAdded: Set<string>, callback: (r: RefObject) => Schema | undefined) {
+        if (schema?.$ref) {
             const refSchema = callback(schema as RefObject);
             refSchema && this.findRefs(refSchema, schemasAdded, callback);
         }
@@ -62,9 +62,11 @@ export class DerefSchema {
         });
     }
 
-    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : object | undefined {
-        const refValue = ref.$ref;
-        const hashIndex = ref.$ref.indexOf('#');
+    static addSchema(ref: RefObject, schemasAdded: Set<string>, validator: Validator, basePath: string) : Schema | undefined {
+        const refValue = ref?.$ref;
+        if (!refValue) throw new Error('can not add addSchema from ref without ref property');
+
+        const hashIndex = refValue.indexOf('#');
         if (hashIndex === 0) { // ignore internal reference
             return;
         }

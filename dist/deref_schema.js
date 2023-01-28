@@ -29,8 +29,9 @@ export class DerefSchema {
         DerefSchema.findRefs(this._schema, this._schemasAded, ref => DerefSchema.addSchema(ref, this._schemasAded, this._validator, this._basePath));
     }
     static findRefs(schema, schemasAdded, callback) {
-        if (schema['$ref'] !== undefined) {
+        if (schema?.$ref) {
             const refSchema = callback(schema);
+            callback({});
             refSchema && this.findRefs(refSchema, schemasAdded, callback);
         }
         Object.keys(schema).forEach(key => {
@@ -42,8 +43,8 @@ export class DerefSchema {
         });
     }
     static addSchema(ref, schemasAdded, validator, basePath) {
-        const refValue = ref.$ref;
-        const hashIndex = ref.$ref.indexOf('#');
+        const refValue = ref?.$ref;
+        const hashIndex = refValue?.indexOf('#');
         if (hashIndex === 0) { // ignore internal reference
             return;
         }
