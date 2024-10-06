@@ -10,11 +10,11 @@ export class DerefSchema {
 
     private readonly _schema: Schema;
     private readonly _validator: Validator;
-    private readonly _schemasAded: Set<string>;
+    private readonly _schemasAdded: Set<string>;
     private readonly _basePath: string;
 
     public getSchemasAded(): Set<string> {
-        return this._schemasAded;
+        return this._schemasAdded;
     }
     public getValidator() {
         return this._validator;
@@ -29,7 +29,7 @@ export class DerefSchema {
     constructor(schema: Schema, draft?: SchemaDraft, shortCircuit?: boolean, basePath?: string) {
         this._schema = schema;
         this._validator = new Validator(schema, draft, shortCircuit);
-        this._schemasAded = new Set<string>();
+        this._schemasAdded = new Set<string>();
         this._basePath = basePath;
     }
 
@@ -44,8 +44,8 @@ export class DerefSchema {
 
     addAllRefSchemas() {
         DerefSchema.findRefs(this._schema as object, 
-            this._schemasAded, 
-            ref => DerefSchema.addSchema(ref, this._schemasAded, this._validator, this._basePath));
+            this._schemasAdded, 
+            ref => DerefSchema.addSchema(ref, this._schemasAdded, this._validator, this._basePath));
     }
 
     static findRefs(schema: RefObject, schemasAdded: Set<string>, callback: (r: RefObject) => Schema | undefined) {

@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 export class DerefSchema {
     getSchemasAded() {
-        return this._schemasAded;
+        return this._schemasAdded;
     }
     getValidator() {
         return this._validator;
@@ -17,7 +17,7 @@ export class DerefSchema {
     constructor(schema, draft, shortCircuit, basePath) {
         this._schema = schema;
         this._validator = new Validator(schema, draft, shortCircuit);
-        this._schemasAded = new Set();
+        this._schemasAdded = new Set();
         this._basePath = basePath;
     }
     static create(schema, draft, shortCircuit, basePath) {
@@ -26,12 +26,11 @@ export class DerefSchema {
         return derefSchema;
     }
     addAllRefSchemas() {
-        DerefSchema.findRefs(this._schema, this._schemasAded, ref => DerefSchema.addSchema(ref, this._schemasAded, this._validator, this._basePath));
+        DerefSchema.findRefs(this._schema, this._schemasAdded, ref => DerefSchema.addSchema(ref, this._schemasAdded, this._validator, this._basePath));
     }
     static findRefs(schema, schemasAdded, callback) {
         if (schema?.$ref) {
             const refSchema = callback(schema);
-            callback({});
             refSchema && this.findRefs(refSchema, schemasAdded, callback);
         }
         Object.keys(schema).forEach(key => {
@@ -44,7 +43,9 @@ export class DerefSchema {
     }
     static addSchema(ref, schemasAdded, validator, basePath) {
         const refValue = ref?.$ref;
-        const hashIndex = refValue?.indexOf('#');
+        if (!refValue)
+            throw new Error('can not add addSchema from ref without ref property');
+        const hashIndex = refValue.indexOf('#');
         if (hashIndex === 0) { // ignore internal reference
             return;
         }

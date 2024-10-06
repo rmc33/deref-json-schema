@@ -5,7 +5,7 @@ Creates a dereferenced schema for the `@cfworker/json-schema` [Validator](https:
 
 # Basic usage 
 
-1. Start with a base schema file `feed.schema.json` that references a subschema file `feed_item.schema.json`
+1. Start with a base schema file, for example, `feed.schema.json`, that references a subschema file, for example, `feed_item.schema.json`.
 ```js
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -30,7 +30,8 @@ const schema = require('./feed.schema.json');
 const schemaDeref = DerefSchema.create(schema);
 ```
 
-Creating a `DerefSchema` will search `schema`, find a `$ref` with value `feed_item.schema.json` and call [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts).`addSchema` with the JSON object from the file. This will be done recusively for all `$ref` schemas; schema files already added will not be added again. A `basePath` can be optionally supplied in `DerefSchema.create` to resolve `$ref` value file paths relative to the `basePath`.
+Creating a `DerefSchema` will traverse `schema` and find a `$ref` attribute with the value `feed_item.schema.json`. 
+The function will then read the file at the value of `$ref` (`feed_item.schema.json`) and call [Validator](https://github.com/cfworker/cfworker/blob/main/packages/json-schema/src/validator.ts).`addSchema` with the JSON object from the file. This will be done recusively for all `$ref` schemas; schema files already added will not be added again. A `basePath` can be optionally supplied in `DerefSchema.create` to resolve `$ref` value file paths relative to the `basePath`.
 
 3. Validate
 ```js

@@ -5,7 +5,7 @@ interface RefObject {
 export declare class DerefSchema {
     private readonly _schema;
     private readonly _validator;
-    private readonly _schemasAded;
+    private readonly _schemasAdded;
     private readonly _basePath;
     getSchemasAded(): Set<string>;
     getValidator(): Validator;
